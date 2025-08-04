@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import { useAuthStore } from './authStore';
+import { SESSION_EXTENSION_PROMPT_TIME, SESSION_TIME } from '../config/session';
 
-const SESSION_DURATION = 1 * 60 * 1000; // 실제는 1분
+const SESSION_DURATION = SESSION_TIME * 60 * 1000; // 실제는 SESSION_TIME 분
 
 type SessionState = {
   remainingTime: number;
@@ -43,7 +44,7 @@ export const useSessionStore = create<SessionState>()((set, get) => {
         const remaining = Math.max(0, SESSION_DURATION - elapsed);
 
         // showWarning은 단발성으로만 켜지도록
-        if (remaining <= 50_000 && remaining > 0 && !get().showWarning && !get().dismissed) {
+        if (remaining <= SESSION_EXTENSION_PROMPT_TIME && remaining > 0 && !get().showWarning && !get().dismissed) {
           set({ showWarning: true });
         }
 
