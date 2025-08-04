@@ -1,9 +1,20 @@
 import Chat from './Chat';
+import { useSessionTimer } from '../hooks/useSessionTimer'; // custom hook
 import { useSessionStore } from '../store/useSessionStore'; // zustand store
 import { useEffect } from 'react';
 
 const Main = () => {
 
+  // NOTE: 세션 타이머를 관리하는 방법을 선택할 수 있습니다.
+  // 타이머 관리 custom hook과 zustand store 중 하나를 선택하여 사용
+  /* custom hook 
+  const {
+    remainingTime,
+    showWarning,
+    extendSession,
+    dismissWarning,
+  } = useSessionTimer();
+*/
   /* zustand store */
   const {
     remainingTime,
@@ -16,6 +27,7 @@ const Main = () => {
   useEffect(() => {
     startTimer();
   }, []);
+
 
   const formatTime = (ms: number) => {
     const sec = Math.floor(ms / 1000);
