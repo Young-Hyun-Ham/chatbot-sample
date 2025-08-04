@@ -3,6 +3,7 @@ import Login from './pages/Login';
 import ProtectedRoute from './routes/ProtectedRoute';
 import Register from './pages/Register';
 import Main from './pages/Main';
+import { CounterProvider } from './store/customHooks/contexts/CounterContext';
 
 function App() {
 
@@ -16,7 +17,10 @@ function App() {
           path="/main"
           element={
             <ProtectedRoute>
-              <Main />
+              {/* 커스텀훅을 사용하기 위해 counter 컴포넌트를 감싸는 CounterProvider를 추가합니다. */}
+              <CounterProvider>
+                <Main />
+              </CounterProvider>
             </ProtectedRoute>
           }
         />

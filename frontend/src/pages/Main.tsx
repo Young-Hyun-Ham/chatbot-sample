@@ -1,8 +1,13 @@
 import Chat from './Chat';
-import { useSessionStore } from '../store/useSessionStore'; // zustand store
-import { useEffect } from 'react';
+import { useSessionStore } from '../store/useSessionStore';
+import { useEffect, useState } from 'react';
+import ZustandCounter from './ZustandCounter';
+import ReduxCounter from './ReduxCounter';
+import CustomCounter from './CustomCounter';
+import { CounterProvider } from '../store/customHooks/contexts/CounterContext';
 
 const Main = () => {
+  const [pagename, setPageName] = useState('chat');
 
   /* zustand store */
   const {
@@ -24,10 +29,35 @@ const Main = () => {
     return `${min}분 ${remainSec}초`;
   };
 
+  function handleClick(pagename: string) {
+    if (pagename === 'zustand') {
+      setPageName('zustand');
+    } else if (pagename === 'redux') {
+      setPageName('redux');
+    } else if (pagename === 'custom') {
+      setPageName('custom');
+    } else {
+      setPageName('chat');
+    }
+  }
+
   return (
     <div className="flex flex-col h-screen">
       <header className="bg-gray-100 p-4 text-center text-sm h-[10%] flex items-center justify-center shadow">
+        &nbsp;|&nbsp;
+        <span style={{cursor: 'pointer'}} onClick={() => {handleClick('zustand')}}>Zustand</span>
+        &nbsp;|&nbsp;
+        <span style={{cursor: 'pointer'}} onClick={() => {handleClick('redux')}}>Redux</span>
+        &nbsp;|&nbsp;
+        <span style={{cursor: 'pointer'}} onClick={() => {handleClick('custom')}}>Custom Hooks</span>
+        &nbsp;|&nbsp;
         세션 남은 시간: <span className="font-bold ml-2">{formatTime(remainingTime)}</span>
+        <button
+          onClick={extendSession}
+          className="text-white px-3 py-1 rounded text-sm"
+        >
+          🔄
+        </button>
         <button
           onClick={() => {
             localStorage.clear();
@@ -39,7 +69,20 @@ const Main = () => {
         </button>
       </header>
       <main className="flex-1 overflow-auto h-[90%]">
-        <Chat />
+        {(() => {
+          switch (pagename) {
+            case 'chat':
+              return <Chat />;
+            case 'custom':
+              return <CustomCounter />;
+            case 'redux':
+              return <ReduxCounter />;
+            case 'zustand':
+              return <ZustandCounter />;
+            default:
+              return <div className="p-4 text-gray-500">페이지를 찾을 수 없습니다.</div>;
+          }
+        })()}
       </main>
     
       {/* 경고 모달 */}
