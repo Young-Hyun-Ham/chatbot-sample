@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import ZustandCounter from './ZustandCounter';
 import ReduxCounter from './ReduxCounter';
 import CustomCounter from './CustomCounter';
-import { CounterProvider } from '../store/customHooks/contexts/CounterContext';
 
 const Main = () => {
   const [pagename, setPageName] = useState('chat');
