@@ -15,6 +15,7 @@ export const useSessionTimer = () => {
   const navigate = useNavigate();
 
   // 로그인 시간 불러오기 (초기 1회)
+  // localStorage를 통해 로그인 시간을 불러와 상태를 초기화 하므로 커스텀 훅을 사용 해도 시간은 초기화 되지 않음.
   useEffect(() => {
     const loginTime = localStorage.getItem('auth_login_time');
     if (loginTime) {
@@ -68,6 +69,7 @@ export const useSessionTimer = () => {
   return {
     remainingTime,
     showWarning,
+    dismissed,
     extendSession,
     dismissWarning,
   };

@@ -2,32 +2,22 @@ import Chat from './Chat';
 import { useSessionTimer } from '../hooks/useSessionTimer'; // custom hook
 import { useSessionStore } from '../store/useSessionStore'; // zustand store
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Main = () => {
 
   // NOTE: 세션 타이머를 관리하는 방법을 선택할 수 있습니다.
   // 타이머 관리 custom hook과 zustand store 중 하나를 선택하여 사용
-  /* custom hook 
+  /* custom hook */
   const {
     remainingTime,
     showWarning,
+    dismissed,
     extendSession,
     dismissWarning,
   } = useSessionTimer();
-*/
-  /* zustand store */
-  const {
-    remainingTime,
-    showWarning,
-    extendSession,
-    dismissWarning,
-    startTimer,
-  } = useSessionStore();
 
-  useEffect(() => {
-    startTimer();
-  }, []);
-
+  // const navigate = useNavigate(); // ✅ React Router의 SPA 방식 사용
 
   const formatTime = (ms: number) => {
     const sec = Math.floor(ms / 1000);
@@ -39,6 +29,14 @@ const Main = () => {
   return (
     <div className="flex flex-col h-screen">
       <header className="bg-gray-100 p-4 text-center text-sm h-[10%] flex items-center justify-center shadow">
+        &nbsp;|&nbsp;
+        <span onClick={() => {
+          window.location.href = '/test'; // zustand store 사용 시
+          // navigate('/test'); // React Router의 SPA 방식으로 페이지 이동
+        }}>
+          페이지이동
+        </span>
+        &nbsp;|&nbsp;
         세션 남은 시간: <span className="font-bold ml-2">{formatTime(remainingTime)}</span>
         <button
           onClick={() => {
@@ -55,7 +53,7 @@ const Main = () => {
       </main>
     
       {/* 경고 모달 */}
-      {showWarning && (
+      {showWarning && !dismissed && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white p-6 rounded shadow-md text-center max-w-sm w-full">
             <h2 className="text-xl font-semibold mb-2 text-red-600">⚠️ 세션 만료 경고</h2>
