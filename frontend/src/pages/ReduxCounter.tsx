@@ -2,6 +2,7 @@ import { useAppDispatch, useAppSelector } from '../store/redux/hooks';
 import { increment, decrement, reset } from '../store/redux/slices/storeSlice';
 
 const ReduxCounter = () => {
+  // dispatch는 Redux 스토어에 액션을 전달
   const dispatch = useAppDispatch();
   const count = useAppSelector((state) => state.store.count);
 
