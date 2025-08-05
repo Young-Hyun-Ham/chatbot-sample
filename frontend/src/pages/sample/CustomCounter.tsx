@@ -1,4 +1,4 @@
-import { useCounter } from '../store/customHooks/useCounter';
+import { useCounter } from '../../store/customHooks/useCounter';
 
 const CustomCounter = () => {
   const { count, increment, reset } = useCounter();

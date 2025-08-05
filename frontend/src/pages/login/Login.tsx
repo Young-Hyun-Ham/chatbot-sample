@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { login } from '../api/authApi';
-import { useAuthStore } from '../store/authStore';
+import { axiosLogin } from '../../api/authApi';
+import { useAuthStore } from '../../store/authStore';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
@@ -17,12 +17,12 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   // Zustand store에서 로그인 함수 가져오기
-  const {login: saveAuth} = useAuthStore();
+  const {login} = useAuthStore();
 
   const handleLogin = async () => {
     try {
-      const res = await login({ email, password });
-      saveAuth(res.token, res.username);
+      const res = await axiosLogin({ email, password }); // axios를 사용한 로그인 API 호출
+      login(res.token, res.email, res.username);
       navigate('/main');
     } catch (err) {
       setError('로그인 실패');

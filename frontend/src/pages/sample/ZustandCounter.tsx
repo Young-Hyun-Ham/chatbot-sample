@@ -1,4 +1,4 @@
-import { useCounterStore } from '../store/zustand/useCounterStore';
+import { useCounterStore } from '../../store/zustand/useCounterStore';
 
 const ZustandCounter = () => {
   const { count, increment, reset } = useCounterStore();

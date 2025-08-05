@@ -1,13 +1,14 @@
-import Chat from './Chat';
+import Chat from './sample/Chat';
 import { useSessionStore } from '../store/useSessionStore';
 import { useEffect, useState } from 'react';
-import ZustandCounter from './ZustandCounter';
-import ReduxCounter from './ReduxCounter';
-import CustomCounter from './CustomCounter';
-import Todos from './Todos';
+import ZustandCounter from './sample/ZustandCounter';
+import ReduxCounter from './sample/ReduxCounter';
+import CustomCounter from './sample/CustomCounter';
+import Todos from './todo/Todos';
+import Scenario from './scenario/Scenario';
 
 const Main = () => {
-  const [pagename, setPageName] = useState('chat');
+  const [pagename, setPageName] = useState('scenario'); // 초기 페이지 이름 설정
 
   /* zustand store */
   const {
@@ -30,16 +31,18 @@ const Main = () => {
   };
 
   function handleClick(pagename: string) {
-    if (pagename === 'zustand') {
+    if (pagename === 'zustand') { // 사용안함.
       setPageName('zustand');
-    } else if (pagename === 'redux') {
+    } else if (pagename === 'redux') { // 사용안함.
       setPageName('redux');
-    } else if (pagename === 'custom') {
+    } else if (pagename === 'custom') { // 사용안함.
       setPageName('custom');
     } else if (pagename === 'todos') {
       setPageName('todos');
+    } else if (pagename === 'scenario') {
+      setPageName('scenario');
     } else {
-      setPageName('chat');
+      setPageName('scenario');
     }
   }
 
@@ -47,13 +50,17 @@ const Main = () => {
     <div className="flex flex-col h-screen">
       <header className="bg-gray-100 p-4 text-center text-sm h-[10%] flex items-center justify-center shadow">
         &nbsp;|&nbsp;
+        <span style={{cursor: 'pointer'}} onClick={() => {handleClick('scenario')}}>Scenario</span>
+        &nbsp;|&nbsp;
         <span style={{cursor: 'pointer'}} onClick={() => {handleClick('todos')}}>Todos</span>
+        {/*
         &nbsp;|&nbsp;
         <span style={{cursor: 'pointer'}} onClick={() => {handleClick('zustand')}}>Zustand</span>
         &nbsp;|&nbsp;
         <span style={{cursor: 'pointer'}} onClick={() => {handleClick('redux')}}>Redux</span>
         &nbsp;|&nbsp;
-        <span style={{cursor: 'pointer'}} onClick={() => {handleClick('custom')}}>Custom Hooks</span>
+        <span style={{cursor: 'pointer'}} onClick={() => {handleClick('custom')}}>Custom Hooks</span> 
+        */}
         &nbsp;|&nbsp;
         세션 남은 시간: <span className="font-bold ml-2">{formatTime(remainingTime)}</span>
         <button
@@ -77,6 +84,8 @@ const Main = () => {
           switch (pagename) {
             case 'chat':
               return <Chat />;
+            case 'scenario':
+              return <Scenario />;
             case 'todos':
               return <Todos />;
             case 'custom':

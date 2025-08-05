@@ -25,6 +25,7 @@ router.post('/login', async (req, res) => {
     // (선택) JWT 발급 또는 그냥 사용자 정보 반환
     return res.json({
       message: '로그인 성공',
+      email: user.email,
       username: user.username,
       token: 'fake-token', // 추후 JWT로 교체 가능
     });

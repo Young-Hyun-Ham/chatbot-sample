@@ -1,9 +1,10 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './pages/Login';
+import Login from './pages/login/Login';
 import ProtectedRoute from './routes/ProtectedRoute';
-import Register from './pages/Register';
+import Register from './pages/member/Register';
 import Main from './pages/Main';
 import { CounterProvider } from './store/customHooks/contexts/CounterContext';
+import ScenarioDetail from './pages/scenario/ScenarioDetail';
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/scenario/:id" element={<ScenarioDetail />} />
       </Routes>
     </BrowserRouter>
   );

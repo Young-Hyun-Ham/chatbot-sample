@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { register } from '../api/authApi';
+import { register } from '../../api/authApi';
 import { useNavigate } from 'react-router-dom';
 
 const Register = () => {

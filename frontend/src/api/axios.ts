@@ -1,12 +1,14 @@
 // src/api/axios.ts
 import axios from 'axios';
+import {type CreateAxiosDefaults} from 'axios';
+import { SESSION_TIME } from '../config/session';
 
 const api = axios.create({
   baseURL: 'http://localhost:5000/api', // 백엔드 주소
   headers: {
     'Content-Type': 'application/json',
   },
-});
+} as CreateAxiosDefaults);
 
 // 요청 인터셉터 추가
 api.interceptors.request.use((config) => {
@@ -15,7 +17,7 @@ api.interceptors.request.use((config) => {
 
   if (token && loginTime) {
     const elapsed = Date.now() - parseInt(loginTime, 10);
-    const MAX_DURATION = 10 * 60 * 1000; // 10분
+    const MAX_DURATION = SESSION_TIME * 60 * 1000; // SESSION_TIME 분
 
     if (elapsed < MAX_DURATION) {
       config.headers.Authorization = `Bearer ${token}`;

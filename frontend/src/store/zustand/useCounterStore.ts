@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { immer } from 'zustand/middleware/immer';
 
 interface CounterState {
   count: number;
@@ -8,14 +8,12 @@ interface CounterState {
 }
 
 export const useCounterStore = create<CounterState>()(
-  persist(
-    (set) => ({
-      count: 0,
-      increment: () => set((state) => ({ count: state.count + 1 })),
-      reset: () => set({ count: 0 }),
+  immer((set) => ({
+    count: 0,
+    // increment: () => set((state) => ({ count: state.count + 1 })),
+    increment: () => set((state) => {
+      state.count += 1;
     }),
-    {
-      name: 'counter-storage', // localStorage 키 이름
-    }
-  )
+    reset: () => set({ count: 0}),
+  }))
 );
