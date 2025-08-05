@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import ZustandCounter from './ZustandCounter';
 import ReduxCounter from './ReduxCounter';
 import CustomCounter from './CustomCounter';
+import Todos from './Todos';
 
 const Main = () => {
   const [pagename, setPageName] = useState('chat');
@@ -35,6 +36,8 @@ const Main = () => {
       setPageName('redux');
     } else if (pagename === 'custom') {
       setPageName('custom');
+    } else if (pagename === 'todos') {
+      setPageName('todos');
     } else {
       setPageName('chat');
     }
@@ -43,6 +46,8 @@ const Main = () => {
   return (
     <div className="flex flex-col h-screen">
       <header className="bg-gray-100 p-4 text-center text-sm h-[10%] flex items-center justify-center shadow">
+        &nbsp;|&nbsp;
+        <span style={{cursor: 'pointer'}} onClick={() => {handleClick('todos')}}>Todos</span>
         &nbsp;|&nbsp;
         <span style={{cursor: 'pointer'}} onClick={() => {handleClick('zustand')}}>Zustand</span>
         &nbsp;|&nbsp;
@@ -72,6 +77,8 @@ const Main = () => {
           switch (pagename) {
             case 'chat':
               return <Chat />;
+            case 'todos':
+              return <Todos />;
             case 'custom':
               return <CustomCounter />;
             case 'redux':
