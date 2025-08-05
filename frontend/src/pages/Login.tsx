@@ -9,14 +9,15 @@ const Login = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/main'); // ✅ 이미 로그인된 상태라면 메인으로
+      navigate('/main'); // 이미 로그인된 상태라면 메인으로
     }
   }, [isAuthenticated]);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { login: saveAuth } = useAuthStore();
+  // Zustand store에서 로그인 함수 가져오기
+  const {login: saveAuth} = useAuthStore();
 
   const handleLogin = async () => {
     try {

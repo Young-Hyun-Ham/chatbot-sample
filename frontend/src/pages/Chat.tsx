@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchMessages, postMessage, type ChatMessage } from '../api/chatApi';
 import { useAuthStore } from '../store/authStore';
 
