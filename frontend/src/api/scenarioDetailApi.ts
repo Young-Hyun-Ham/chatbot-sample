@@ -21,23 +21,23 @@ export interface TextNode extends BaseNode {
 export interface SlotFillingDataItem {
   label: string;
   value: string;
-  slotKey?: string;
-  required?: boolean;
 }
 
 export interface SlotFillingNode extends BaseNode {
   type: 'slotFillingNode';
   data: {
-    items: SlotFillingDataItem[];
+    question: string; // 질문 텍스트
+    slotKey: string;  // 슬롯 이름
+    items: SlotFillingDataItem[]; // 퀵 리플라이
   };
 }
 
 export interface ConditionNode extends BaseNode {
   type: 'conditionNode';
   data: {
-    condition: string;
-    trueBranch: string;
-    falseBranch: string;
+    value: string; // 조건 질문 텍스트
+    trueLabel?: string; // 확인
+    falseLabel?: string; // 취소
   };
 }
 

@@ -16,7 +16,7 @@ import '@xyflow/react/dist/style.css';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useScenarioStore } from '../store/useScenarioStore';
 import TextNode from './node/TextNode';
-// import SlotFillingNode from './node/SlotFillingNode';
+import SlotFillingNode from './node/SlotFillingNode';
 // import ConditionNode from './node/ConditionNode';
 
 const FlowEditor = () => {
@@ -30,17 +30,17 @@ const FlowEditor = () => {
 
   const nodeTypes = useMemo(() => ({
     textNode: TextNode,
-    // slotFillingNode: SlotFillingNode,
+    slotFillingNode: SlotFillingNode,
     // conditionNode: ConditionNode,
   }), []);
 
   // 이걸로 실제 노드 리스트 추적
-  useEffect(() => {
-    console.log('📦 FlowEditor 렌더링됨');
-    console.log('▶ nodes.length:', nodes.length);
-    console.log('▶ node ids:', nodes.map((n) => n.id));
-    console.log('▶ node types:', nodes.map((n) => n.type));
-  }, [nodes]);
+  // useEffect(() => {
+  //   console.log('📦 FlowEditor 렌더링됨');
+  //   console.log('▶ nodes.length:', nodes.length);
+  //   console.log('▶ node ids:', nodes.map((n) => n.id));
+  //   console.log('▶ node types:', nodes.map((n) => n.type));
+  // }, [nodes]);
 
   const handleNodesChange = useCallback(
     (changes: NodeChange[]) => {

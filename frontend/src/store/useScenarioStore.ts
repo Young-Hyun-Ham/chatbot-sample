@@ -47,15 +47,41 @@ export const useScenarioStore = create<ScenarioStore>((set, get) => ({
       condition: 'conditionNode',
     };
 
-    const newNode: Node = {
-      id,
-      type: typeMap[type],
-      position: { x: Math.random() * 300, y: Math.random() * 300 },
-      data: {
-        label: labelMap[type],
-        value: '',
-      },
-    };
+    let newNode: Node;
+
+    if (type === 'slotFilling') {
+      newNode = {
+        id,
+        type: 'slotFillingNode',
+        position: { x: Math.random() * 300, y: Math.random() * 300 },
+        data: {
+          question: '질문을 입력하세요.',
+          slotKey: 'newSlot',
+          items: [],
+        },
+      } as SlotFillingNode;
+    // } else if (type === 'condition') {
+    //   newNode = {
+    //     id,
+    //     type: 'conditionNode',
+    //     position: { x: Math.random() * 300, y: Math.random() * 300 },
+    //     data: {
+    //       value: '조건을 입력하세요.',
+    //       trueBranch: '',
+    //       falseBranch: '',
+    //     },
+    //   } as ConditionNode;
+    } else {
+      newNode = {
+        id,
+        type: typeMap[type],
+        position: { x: Math.random() * 300, y: Math.random() * 300 },
+        data: {
+          label: labelMap[type],
+          value: '',
+        },
+      }as TextNode;
+    }
 
     set({
       nodes: [...get().nodes, newNode],

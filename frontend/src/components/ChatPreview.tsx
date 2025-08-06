@@ -15,38 +15,31 @@ const ChatPreview = () => {
   const nodes = useScenarioStore((state) => state.nodes);
 
   mockMessages = [
-    { type: 'bot', text: JSON.stringify(scenarioData, null, 2) },
-    { type: 'user', text: JSON.stringify(nodes, null, 2) },
+    // { type: 'bot', text: JSON.stringify(scenarioData, null, 2) },
+    // { type: 'user', text: JSON.stringify(nodes, null, 2) },
   ];
 
   return (
-    <div className="h-full overflow-y-auto p-4">
-      <h2 className="text-xl font-bold mb-4">챗봇</h2>
-      {mockMessages.map((msg, idx) => (
-        <div key={idx} className={`mb-2 ${msg.type === 'user' ? 'text-right' : 'text-left'}`}>
-          <div
-            className={`inline-block px-4 py-2 rounded-lg ${
-              msg.type === 'user'
-                ? 'bg-yellow-300 text-black'
-                : 'bg-white border text-black'
-            }`}
-          >
-            {msg.text}
-          </div>
-          {msg.quickReplies && (
-            <div className="flex mt-2 space-x-2">
-              {msg.quickReplies.map((qr, i) => (
-                <button
-                  key={i}
-                  className="px-3 py-1 border border-gray-400 rounded text-sm"
-                >
-                  {qr}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      ))}
+    <div className="flex flex-col h-full">
+      {/* 상단 바 */}
+      <div className="flex justify-between items-center px-4 py-2 border-b bg-white">
+        <h2 className="font-bold text-lg">챗봇</h2>
+        <button className="px-3 py-1 border rounded-full text-sm text-gray-600 hover:bg-gray-100">
+          다시 시작
+        </button>
+      </div>
+
+      {/* 본문 영역 */}
+      <div className="flex-1 bg-blue-100 flex items-center justify-center">
+        {/* 빈 상태이므로 내용 없음 */}
+      </div>
+
+      {/* 하단 버튼 */}
+      <div className="p-4">
+        <button className="w-full py-3 bg-white border rounded-full text-blue-800 font-semibold hover:bg-gray-50">
+          대화 다시 시작하기
+        </button>
+      </div>
     </div>
   );
 };

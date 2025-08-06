@@ -3,10 +3,15 @@ import { useScenarioStore } from '../../store/useScenarioStore';
 import { useState } from 'react';
 
 const TextNode = ({ id, data }: any) => {
+  const updateNodeData = useScenarioStore((s) => s.updateNodeData);
   const deleteNode = useScenarioStore((state) => state.deleteNode);
   
   // 상태 관리에서 data를 가져옵니다.
   const [value, setValue] = useState(data.value || '');
+
+  const handleValueChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    updateNodeData(id, { value: e.target.value });
+  };
   
   // data가 없으면 렌더링하지 않음
   if (!data) return null;
@@ -28,8 +33,8 @@ const TextNode = ({ id, data }: any) => {
         <textarea
           className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
           rows={2}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
+          value={data.value || ''}
+            onChange={handleValueChange}
         />
 
         <label className="text-xs font-medium block">Quick Replies</label>

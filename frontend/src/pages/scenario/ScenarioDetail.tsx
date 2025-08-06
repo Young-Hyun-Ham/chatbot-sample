@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import ChatPreview from '../../components/ChatPreview';
 import FlowEditor from '../../components/FlowEditor';
 import SectionToolbar from '../../components/SectionToolbar';
@@ -6,14 +6,16 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../../api/axios';
 import { useScenarioStore } from '../../store/useScenarioStore';
 import { useAuthStore } from '../../store/authStore';
+import LogPreview from '../../components/LogPreview';
 
 const ScenarioDetail = () => {
   const navigate = useNavigate();
   const email = useAuthStore((state) => state.email);
   const { setNodes, setEdges } = useScenarioStore();
   const scenarioData = useScenarioStore((state) => state.scenarioData);
-  
-  const { id } = useParams(); // 시나리오 ID 파라미터
+  const { id } = useParams();
+
+  const [isLogVisible, setIsLogVisible] = useState(true);
 
   useEffect(() => {
     const loadScenario = async () => {
@@ -27,19 +29,26 @@ const ScenarioDetail = () => {
   }, [id, setNodes, setEdges]);
 
   const handleSave = async () => {
-
     await api.post(`/scenario_detail`, {
       scenario_id: id,
       data: scenarioData,
-      create_id: email
+      create_id: email,
     });
   };
 
+  // Flow 영역 너비: Log 열림 여부에 따라 가변
+  const flowPanelWidth = isLogVisible
+    ? 'calc(100% - 500px)' // Chat 250px + Log 250px
+    : 'calc(100% - 250px)'; // Chat만 있음
+
   return (
-    <div className="flex h-screen">
-      {/* 좌측 전체 */}
-      <div className="w-2/3 flex flex-col border-r">
-        {/* 상단 바 (목록, 저장 버튼) */}
+    <div className="relative h-screen overflow-hidden">
+      {/* 1. 가운데 Flow 프레임 */}
+      <div
+        className="flex flex-col border-r transition-all duration-300"
+        style={{ width: flowPanelWidth }}
+      >
+        {/* 상단 바 */}
         <div className="flex justify-end items-center px-6 py-4 border-b bg-white">
           <button
             onClick={() => navigate('/')}
@@ -55,22 +64,42 @@ const ScenarioDetail = () => {
           </button>
         </div>
 
-        {/* SectionToolbar + FlowEditor */}
-        <div className="flex flex-1 relative">
-          {/* 좌측 상단 툴바 고정 */}
-          <div className="absolute top-4 left-4 z-10">
+        {/* 버튼 + FlowEditor */}
+        <div className="flex flex-1">
+          {/* 버튼 패널 (15%) */}
+          <div className="w-[15%] p-4 border-r bg-white">
             <SectionToolbar />
           </div>
 
-          {/* React Flow 에디터 */}
-          <div className="w-full h-full">
+          {/* FlowEditor (85%) */}
+          <div className="w-[85%]">
             <FlowEditor />
           </div>
         </div>
       </div>
 
-      {/* 우측: 채팅 프리뷰 */}
-      <div className="w-1/3 bg-gray-100">
+      {/* 2. 로그 화면: Chat 왼쪽에 고정 */}
+      {isLogVisible && (
+        <div className="absolute top-0 right-[250px] h-full w-[250px] bg-white border-r transition-all duration-300">
+          <LogPreview />
+        </div>
+      )}
+
+      {/* 3. 토글 버튼: 항상 Chat 왼쪽 중앙에 고정 */}
+      <div
+        className="absolute top-[10%] z-30 transition-all duration-300"
+        style={{ right: '250px', transform: 'translateX(50%)' }}
+      >
+        <button
+          onClick={() => setIsLogVisible((prev) => !prev)}
+          className="w-8 h-8 rounded-full bg-white border border-gray-300 shadow-md flex items-center justify-center text-red-500 hover:bg-gray-100 transition"
+        >
+          {isLogVisible ? '❯' : '❮'}
+        </button>
+      </div>
+
+      {/* 4. 챗봇 화면: 우측에 항상 고정 */}
+      <div className="absolute top-0 right-0 h-full w-[250px] bg-blue-100">
         <ChatPreview />
       </div>
     </div>
