@@ -19,7 +19,7 @@ import TextNode from './node/TextNode';
 import SlotFillingNode from './node/SlotFillingNode';
 import ConditionNode from './node/ConditionNode';
 
-const FlowEditor = () => {
+const FlowEditor = ({ onClickList, onClickSave }: any) => {
   const nodes = useScenarioStore((s) => s.nodes);
   const edges = useScenarioStore((s) => s.edges);
   const setNodes = useScenarioStore((s) => s.setNodes);
@@ -73,32 +73,50 @@ const FlowEditor = () => {
   );
 
   return (
-    <div className="flex-1 h-full">
-      <ReactFlow
-        key={nodes.map((n) => n.id).join('-')}
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={handleNodesChange}
-        onEdgesChange={handleEdgesChange}
-        onConnect={onConnect}
-        nodeTypes={nodeTypes}
-        defaultViewport={{ x: 0, y: 0, zoom: 0.9 }}
-        onNodeDragStop={(event, node) => {
-          updateNodePosition(node.id, node.position.x, node.position.y);
-        }}
-        onNodeDoubleClick={(event, node) => {
-          const newLabel = prompt('새 라벨 입력:', node.data?.label as string);
-          if (newLabel !== null) {
-            updateNodeData(node.id, { label: newLabel });
-          }
-        }}
-        elementsSelectable
-        nodesConnectable
-      >
-        <MiniMap />
-        <Controls />
-        <Background variant={BackgroundVariant.Dots} gap={16} size={1} />
-      </ReactFlow>
+    <div className="relative w-full h-full">
+      {/* 우측 상단 고정 버튼 */}
+      <div className="absolute top-0 right-0 z-10 px-6 py-4">
+        <button
+          onClick={onClickList}
+          className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 mr-2"
+        >
+          목록
+        </button>
+        <button
+          onClick={onClickSave}
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          저장
+        </button>
+      </div>
+      {/* 플로우 에디터 */}
+      <div className="flex-1 h-full">
+        <ReactFlow
+          key={nodes.map((n) => n.id).join('-')}
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={handleNodesChange}
+          onEdgesChange={handleEdgesChange}
+          onConnect={onConnect}
+          nodeTypes={nodeTypes}
+          defaultViewport={{ x: 0, y: 0, zoom: 0.9 }}
+          onNodeDragStop={(event, node) => {
+            updateNodePosition(node.id, node.position.x, node.position.y);
+          }}
+          onNodeDoubleClick={(event, node) => {
+            const newLabel = prompt('새 라벨 입력:', node.data?.label as string);
+            if (newLabel !== null) {
+              updateNodeData(node.id, { label: newLabel });
+            }
+          }}
+          elementsSelectable
+          nodesConnectable
+        >
+          <MiniMap />
+          <Controls />
+          <Background variant={BackgroundVariant.Dots} gap={16} size={1} />
+        </ReactFlow>
+      </div>
     </div>
   );
 };

@@ -36,53 +36,42 @@ const ScenarioDetail = () => {
     });
   };
 
-  // Flow 영역 너비: Log 열림 여부에 따라 가변
   const flowPanelWidth = isLogVisible
-    ? 'calc(100% - 500px)' // Chat 250px + Log 250px
-    : 'calc(100% - 250px)'; // Chat만 있음
+    ? 'calc(100% - 500px)' // Log + Chat
+    : 'calc(100% - 250px)'; // Chat만
 
   return (
     <div className="relative h-screen overflow-hidden">
-      {/* 1. 가운데 Flow 프레임 */}
-      <div
-        className="flex flex-col border-r flex-1 h-full"
-        style={{ width: flowPanelWidth }}
-      >
-        {/* 상단 바 */}
-        <div className="flex justify-end items-center px-6 py-4 border-b bg-white">
-          <button
-            onClick={() => navigate('/')}
-            className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 mr-2"
-          >
-            목록
-          </button>
-          <button
-            onClick={handleSave}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
-            저장
-          </button>
+      {/* 전체 Flow 프레임 */}
+      <div className="flex h-full border-r" style={{ width: flowPanelWidth }}>
+        {/* 1. 좌측 툴바 고정: 150px */}
+        <div className="w-[150px] border-r p-4 bg-white">
+          <SectionToolbar />
         </div>
 
-        {/* 버튼 + FlowEditor */}
-        <div className="flex flex-1 h-full relative">
-          <div className="absolute top-4 left-4 z-10">
-            <SectionToolbar />
-          </div>
-          <div className="w-full h-full">
-            <FlowEditor />
-          </div>
+        {/* 2. FlowEditor: (중앙) */}
+        {/* <div className="flex-1 h-full"> */}
+        <div className="flex-1 h-full border-r" style={{ width: flowPanelWidth }}>
+          <FlowEditor
+            onClickList={() => navigate('/')}
+            onClickSave={handleSave}
+          />
         </div>
       </div>
 
-      {/* 2. 로그 화면: Chat 왼쪽에 고정 */}
+      {/* 3. 로그 프리뷰 */}
       {isLogVisible && (
         <div className="absolute top-0 right-[250px] h-full w-[250px] bg-white border-r transition-all duration-300">
           <LogPreview />
         </div>
       )}
 
-      {/* 3. 토글 버튼: 항상 Chat 왼쪽 중앙에 고정 */}
+      {/* 4. 챗봇 */}
+      <div className="absolute top-0 right-0 h-full w-[250px] bg-blue-100">
+        <ChatPreview />
+      </div>
+
+      {/* 토글 버튼 */}
       <div
         className="absolute top-[10%] z-30 transition-all duration-300"
         style={{ right: '250px', transform: 'translateX(50%)' }}
@@ -93,11 +82,6 @@ const ScenarioDetail = () => {
         >
           {isLogVisible ? '❯' : '❮'}
         </button>
-      </div>
-
-      {/* 4. 챗봇 화면: 우측에 항상 고정 */}
-      <div className="absolute top-0 right-0 h-full w-[250px] bg-blue-100">
-        <ChatPreview />
       </div>
     </div>
   );
