@@ -45,7 +45,7 @@ const ScenarioDetail = () => {
     <div className="relative h-screen overflow-hidden">
       {/* 1. 가운데 Flow 프레임 */}
       <div
-        className="flex flex-col border-r transition-all duration-300"
+        className="flex flex-col border-r flex-1 h-full"
         style={{ width: flowPanelWidth }}
       >
         {/* 상단 바 */}
@@ -65,14 +65,11 @@ const ScenarioDetail = () => {
         </div>
 
         {/* 버튼 + FlowEditor */}
-        <div className="flex flex-1">
-          {/* 버튼 패널 (15%) */}
-          <div className="w-[15%] p-4 border-r bg-white">
+        <div className="flex flex-1 h-full relative">
+          <div className="absolute top-4 left-4 z-10">
             <SectionToolbar />
           </div>
-
-          {/* FlowEditor (85%) */}
-          <div className="w-[85%]">
+          <div className="w-full h-full">
             <FlowEditor />
           </div>
         </div>

@@ -17,7 +17,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { useScenarioStore } from '../store/useScenarioStore';
 import TextNode from './node/TextNode';
 import SlotFillingNode from './node/SlotFillingNode';
-// import ConditionNode from './node/ConditionNode';
+import ConditionNode from './node/ConditionNode';
 
 const FlowEditor = () => {
   const nodes = useScenarioStore((s) => s.nodes);
@@ -31,7 +31,7 @@ const FlowEditor = () => {
   const nodeTypes = useMemo(() => ({
     textNode: TextNode,
     slotFillingNode: SlotFillingNode,
-    // conditionNode: ConditionNode,
+    conditionNode: ConditionNode,
   }), []);
 
   // 이걸로 실제 노드 리스트 추적

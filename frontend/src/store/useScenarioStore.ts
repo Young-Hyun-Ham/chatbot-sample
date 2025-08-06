@@ -60,17 +60,17 @@ export const useScenarioStore = create<ScenarioStore>((set, get) => ({
           items: [],
         },
       } as SlotFillingNode;
-    // } else if (type === 'condition') {
-    //   newNode = {
-    //     id,
-    //     type: 'conditionNode',
-    //     position: { x: Math.random() * 300, y: Math.random() * 300 },
-    //     data: {
-    //       value: '조건을 입력하세요.',
-    //       trueBranch: '',
-    //       falseBranch: '',
-    //     },
-    //   } as ConditionNode;
+    } else if (type === 'condition') {
+      newNode = {
+        id,
+        type: 'conditionNode',
+        position: { x: Math.random() * 300, y: Math.random() * 300 },
+        data: {
+          value: '조건을 입력하세요.',
+          trueBranch: '',
+          falseBranch: '',
+        },
+      } as ConditionNode;
     } else {
       newNode = {
         id,
