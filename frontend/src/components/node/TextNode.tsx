@@ -1,11 +1,17 @@
 import { Handle, Position } from '@xyflow/react';
 import { useScenarioStore } from '../../store/useScenarioStore';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const TextNode = ({ id, data }: any) => {
   const updateNodeData = useScenarioStore((s) => s.updateNodeData);
   const deleteNode = useScenarioStore((state) => state.deleteNode);
+
+  const [label, setLabel] = useState(data.label);
   
+  useEffect(() => {
+    setLabel(data.label);
+  }, [data.label]);
+
   // 상태 관리에서 data를 가져옵니다.
   const [value, setValue] = useState(data.value || '');
 
@@ -20,7 +26,7 @@ const TextNode = ({ id, data }: any) => {
     <div className="bg-orange-300 text-white rounded shadow-md w-64 border-2 border-orange-500">
       {/* Header */}
       <div className="flex justify-between items-center px-3 py-2 bg-orange-500 rounded-t">
-        <span className="font-bold text-sm">Type: text</span>
+        <span className="font-bold text-sm">{data.label}</span>
         <button 
             className="text-white hover:text-red-200"
             onClick={() => deleteNode(id)}

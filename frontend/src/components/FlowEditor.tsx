@@ -80,13 +80,13 @@ const FlowEditor = ({ onClickList, onClickSave }: any) => {
           onClick={onClickList}
           className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 mr-2"
         >
-          목록
+          List
         </button>
         <button
           onClick={onClickSave}
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
-          저장
+          Save Scenario
         </button>
       </div>
       {/* 플로우 에디터 */}

@@ -33,6 +33,9 @@ const ScenarioList = () => {
     description: '',
   });
 
+  // 설명 클릭 시 tooltip을 열고 닫는 isTooltipOpen을 state로 관리.
+  const [openTooltipId, setOpenTooltipId] = useState<string | null>(null);
+
   const loadScenario = async () => {
     try {
       const data = await getScenarioList();
@@ -130,7 +133,6 @@ const ScenarioList = () => {
         {scenarios.map((s) => (
           <div
             key={s.id}
-            onClick={() => handleSelectScenario(s.id)}
             className="bg-white px-4 py-3 rounded border space-y-2"
           >
             {editingScenarioId === s.id ? (
@@ -166,11 +168,62 @@ const ScenarioList = () => {
             ) : (
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-lg font-semibold">
+                  {/* title */}
+                  <p className="text-lg font-semibold"
+                    style={{cursor:'pointer'}} 
+                    onClick={() => handleSelectScenario(s.id)}
+                  >
                     {s.scenario_data?.title || '(제목 없음)'}
                   </p>
-                  {s.scenario_data?.description && (
-                    <p className="text-sm text-gray-500">{s.scenario_data.description}</p>
+                  {/*
+                    description mouseover 시 tooltip 표시
+                    tooltip : group-hover로 tooptip 표시
+                  */}
+                  {/*
+                  { s.scenario_data?.description && (
+                    <div className="relative group max-w-xs">
+                      <p className="text-sm text-gray-500 truncate">
+                        {s.scenario_data.description.length > 20
+                          ? s.scenario_data.description.slice(0, 20) + '...'
+                          : s.scenario_data.description}
+                      </p>
+                      {s.scenario_data.description.length > 20 && (
+                        <div className="absolute z-10 hidden group-hover:block bg-black text-white text-xs whitespace-pre-wrap p-2 rounded shadow-lg w-64 top-full left-0 mt-1">
+                          {s.scenario_data.description}
+                        </div>
+                      )}
+
+                    </div>
+                  )}
+                  */}
+                  {/*
+                    description ... 클릭 시 tooltip 토글로 표시
+                    tooltip : group-hover로 tooptip 표시
+                  */}
+                  { s.scenario_data?.description && (
+                    <div className="relative max-w-xs text-sm text-gray-500">
+                      {s.scenario_data.description.length > 20 ? (
+                        <span>
+                          {s.scenario_data.description.slice(0, 20)}
+                          <span
+                            className="text-blue-500 cursor-pointer"
+                            onClick={() =>
+                              setOpenTooltipId(openTooltipId === s.id ? null : s.id)
+                            }
+                          >
+                            (&nbsp;...&nbsp;)
+                          </span>
+                        </span>
+                      ) : (
+                        <span>{s.scenario_data.description}</span>
+                      )}
+
+                      {s.scenario_data.description.length > 20 && openTooltipId === s.id && (
+                        <div className="absolute z-10 bg-black text-white text-xs whitespace-pre-wrap p-2 rounded shadow-lg w-64 top-full left-0 mt-1">
+                          {s.scenario_data.description}
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
                 
