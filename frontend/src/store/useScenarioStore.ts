@@ -1,106 +1,181 @@
 import { create } from 'zustand';
 import { type Node, type Edge } from '@xyflow/react';
 import { nanoid } from 'nanoid';
-import type { ScenarioData, ScenarioNode } from '../api/scenarioDetailApi';
-import { immer } from 'zustand/middleware/immer';
+import type { ConditionNode, ScenarioData, ScenarioNode, SlotFillingNode, TextNode } from '../api/scenarioDetailApi';
 
 type NodeType = 'text' | 'slotFilling' | 'condition';
 
 interface ScenarioStore {
   nodes: Node[];
   edges: Edge[];
-  scenarioData: ScenarioData; // 시나리오 데이터 구조에 맞게 타입 정의
-  setNodes: (nodes: Node[]) => void;
+  scenarioData: ScenarioData;
+  setNodes: (nodes: Node[] | ((prev: Node[]) => Node[])) => void;
   setEdges: (edges: Edge[]) => void;
   addNode: (type: NodeType) => void;
   deleteNode: (id: string) => void;
-  /** 노드 위치 업데이트 */
   updateNodePosition: (id: string, x: number, y: number) => void;
   updateNodeData: (id: string, data: Partial<Node['data']>) => void;
   addEdgeToScenarioData: (edge: Edge) => void;
 }
 
-export const useScenarioStore = create<ScenarioStore>()(
-  immer((set, get) => ({
+export const useScenarioStore = create<ScenarioStore>((set, get) => ({
+  nodes: [],
+  edges: [],
+  scenarioData: {
     nodes: [],
     edges: [],
-    scenarioData: {
-      nodes: [],
-      edges: [],
-    },
+  },
 
-    setNodes: (updatedNodes) => set({ nodes: updatedNodes }),
-    setEdges: (edges) => set({ edges }),
+  // setNodes: (updatedNodes) => set({ nodes: [...updatedNodes] }),
+  setNodes: (updater) =>
+  set((state) => ({
+    nodes: typeof updater === 'function' ? updater(state.nodes) : [...updater],
+  })),
+  setEdges: (edges) => set({ edges }),
 
-    /** 노드 추가 */
-    addNode: (type: NodeType) => {
-      alert(type === 'text' ? 'textNode' : 'default');
-      const id = nanoid();
-      const labelMap = {
-        text: 'Type: text',
-        slotFilling: 'Type: slotFilling',
-        condition: 'Type: condition',
-      };
+  addNode: (type: NodeType) => {
+    const id = nanoid();
+    const labelMap = {
+      text: 'Type: text',
+      slotFilling: 'Type: slotFilling',
+      condition: 'Type: condition',
+    };
 
-      const newNode: Node = {
-        id,
-        type: type === 'text' ? 'textNode' : 'default',
-        position: { x: Math.random() * 300, y: Math.random() * 300 },
-        data: {
-          label: labelMap[type],
-          value: '',
-        },
-      };
+    const typeMap = {
+      text: 'textNode',
+      slotFilling: 'slotFillingNode',
+      condition: 'conditionNode',
+    };
 
-      const updatedNodes = [...get().nodes, newNode];
-      set((state) => {
-        state.nodes = updatedNodes as any;
-        state.scenarioData.nodes.push(newNode as any);
-      });
-    },
+    const newNode: Node = {
+      id,
+      type: typeMap[type],
+      position: { x: Math.random() * 300, y: Math.random() * 300 },
+      data: {
+        label: labelMap[type],
+        value: '',
+      },
+    };
 
-    /** 노드 삭제 */
-    deleteNode: (id: string) => {
-      set((state) => {
-        state.nodes = state.nodes.filter((node) => node.id !== id);
-        state.edges = state.edges.filter(
-          (edge) => edge.source !== id && edge.target !== id
-        );
-        state.scenarioData.nodes = state.scenarioData.nodes.filter(
-          (node) => node.id !== id
-        );
-        state.scenarioData.edges = state.scenarioData.edges.filter(
-          (edge) => edge.source !== id && edge.target !== id
-        );
-      });
-    },
+    set({
+      nodes: [...get().nodes, newNode],
+      scenarioData: {
+        ...get().scenarioData,
+        nodes: [...get().scenarioData.nodes, newNode as ScenarioNode],
+      },
+    });
+  },
 
-    /** 노드 위치 변경 */
-    updateNodePosition: (id, x, y) =>
-      set((state) => {
-        const node = state.scenarioData.nodes.find((n) => n.id === id);
-        if (node) {
-          node.position = { x, y };
-        }
-      }),
+  deleteNode: (id: string) => {
+    const originalNodes = get().nodes;
+    const updatedNodes = originalNodes.filter((node) => node.id !== id);
+    const updatedEdges = get().edges.filter(
+      (edge) => edge.source !== id && edge.target !== id
+    );
+    const updatedScenarioNodes = get().scenarioData.nodes.filter(
+      (node) => node.id !== id
+    );
+    const updatedScenarioEdges = get().scenarioData.edges.filter(
+      (edge) => edge.source !== id && edge.target !== id
+    );
 
-    /** 노드 데이터 변경 */
-    updateNodeData: (id, data) =>
-      set((state) => {
-        const node = state.scenarioData.nodes.find((n) => n.id === id);
-        if (node) {
-          node.data = {
-            ...node.data,
-            ...data,
+    // ✅ 확실하게 참조 변경
+    set({
+      nodes: [...updatedNodes],
+      edges: [...updatedEdges],
+      scenarioData: {
+        ...get().scenarioData,
+        nodes: [...updatedScenarioNodes],
+        edges: [...updatedScenarioEdges],
+      },
+    });
+  },
+
+  updateNodePosition: (id, x, y) => {
+    const updatedNodes = get().nodes.map((node) => {
+      if (node.id !== id) return node;
+
+      switch (node.type) {
+        case 'textNode':
+          return {
+            ...node,
+            position: { x, y },
+          } as TextNode;
+        case 'slotFillingNode':
+          return {
+            ...node,
+            position: { x, y },
+          } as SlotFillingNode;
+        case 'conditionNode':
+          return {
+            ...node,
+            position: { x, y },
+          } as ConditionNode;
+        default:
+          return node;
+      }
+    });
+
+    set({
+      nodes: updatedNodes,
+      scenarioData: {
+        ...get().scenarioData,
+        nodes: updatedNodes as ScenarioNode[],
+      },
+    });
+  },
+
+  updateNodeData: (id, data) => {
+    const updatedNodes = get().nodes.map((node) => {
+      if (node.id !== id) return node;
+
+      // 타입 좁히기
+      switch (node.type) {
+        case 'textNode':
+          return {
+            ...node,
+            data: {
+              ...(node.data as TextNode['data']),
+              ...(data as TextNode['data']),
+            },
           };
-        }
-      }),
+        case 'slotFillingNode':
+          return {
+            ...node,
+            data: {
+              ...(node.data as SlotFillingNode['data']),
+              ...(data as SlotFillingNode['data']),
+            },
+          };
+        case 'conditionNode':
+          return {
+            ...node,
+            data: {
+              ...(node.data as ConditionNode['data']),
+              ...(data as ConditionNode['data']),
+            },
+          };
+        default:
+          return node;
+      }
+    });
 
-    /** edge 추가 */
-    addEdgeToScenarioData: (edge: Edge) =>
-      set((state) => {
-        state.edges.push(edge);
-        state.scenarioData.edges.push(edge);
-      }),
-  }))
-);
+    set({
+      nodes: updatedNodes,
+      scenarioData: {
+        ...get().scenarioData,
+        nodes: updatedNodes as ScenarioNode[],
+      },
+    });
+  },
+
+  addEdgeToScenarioData: (edge: Edge) => {
+    set({
+      edges: [...get().edges, edge],
+      scenarioData: {
+        ...get().scenarioData,
+        edges: [...get().scenarioData.edges, edge],
+      },
+    });
+  },
+}));

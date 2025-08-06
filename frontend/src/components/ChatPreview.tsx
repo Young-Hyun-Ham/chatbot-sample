@@ -12,11 +12,13 @@ let mockMessages = [
 
 const ChatPreview = () => {
   const scenarioData = useScenarioStore((state) => state.scenarioData);
+  const nodes = useScenarioStore((state) => state.nodes);
 
   mockMessages = [
     { type: 'bot', text: JSON.stringify(scenarioData, null, 2) },
+    { type: 'user', text: JSON.stringify(nodes, null, 2) },
   ];
-  
+
   return (
     <div className="h-full overflow-y-auto p-4">
       <h2 className="text-xl font-bold mb-4">챗봇</h2>

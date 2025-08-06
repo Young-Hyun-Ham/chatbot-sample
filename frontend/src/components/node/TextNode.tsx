@@ -1,8 +1,15 @@
 import { Handle, Position } from '@xyflow/react';
 import { useScenarioStore } from '../../store/useScenarioStore';
+import { useState } from 'react';
 
 const TextNode = ({ id, data }: any) => {
   const deleteNode = useScenarioStore((state) => state.deleteNode);
+  
+  // 상태 관리에서 data를 가져옵니다.
+  const [value, setValue] = useState(data.value || '');
+  
+  // data가 없으면 렌더링하지 않음
+  if (!data) return null;
 
   return (
     <div className="bg-orange-300 text-white rounded shadow-md w-64 border-2 border-orange-500">
@@ -21,7 +28,8 @@ const TextNode = ({ id, data }: any) => {
         <textarea
           className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
           rows={2}
-          defaultValue={data.value || ''}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
         />
 
         <label className="text-xs font-medium block">Quick Replies</label>
