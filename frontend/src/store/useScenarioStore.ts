@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { type Node, type Edge } from '@xyflow/react';
 import { nanoid } from 'nanoid';
-import type { ConditionNode, ScenarioData, ScenarioNode, SlotFillingNode, TextNode } from '../api/scenarioDetailApi';
+import type { ConditionNode, ScenarioData, ScenarioEdge, ScenarioNode, SlotFillingNode, TextNode } from '../types/scenario';
 
 type NodeType = 'text' | 'slotFilling' | 'condition';
 
@@ -9,8 +9,9 @@ interface ScenarioStore {
   nodes: Node[];
   edges: Edge[];
   scenarioData: ScenarioData;
+  setScenarioData: (data: ScenarioData) => void;
   setNodes: (nodes: Node[] | ((prev: Node[]) => Node[])) => void;
-  setEdges: (edges: Edge[]) => void;
+  setEdges: (edges: Edge[] | ((prev: Edge[]) => Edge[])) => void;
   addNode: (type: NodeType) => void;
   deleteNode: (id: string) => void;
   updateNodePosition: (id: string, x: number, y: number) => void;
@@ -25,13 +26,20 @@ export const useScenarioStore = create<ScenarioStore>((set, get) => ({
     nodes: [],
     edges: [],
   },
+  setScenarioData: (data) => 
+    set({
+      scenarioData: data,
+    }),
 
   // setNodes: (updatedNodes) => set({ nodes: [...updatedNodes] }),
   setNodes: (updater) =>
-  set((state) => ({
-    nodes: typeof updater === 'function' ? updater(state.nodes) : [...updater],
-  })),
-  setEdges: (edges) => set({ edges }),
+    set((state) => ({
+      nodes: typeof updater === 'function' ? updater(state.nodes) : [...updater],
+    })),
+  setEdges: (updater) =>
+    set((state) => ({
+      edges: typeof updater === 'function' ? updater(state.edges) : [...updater],
+    })),
 
   addNode: (type: NodeType) => {
     const id = nanoid();
@@ -142,11 +150,18 @@ export const useScenarioStore = create<ScenarioStore>((set, get) => ({
       }
     });
 
+    const updatedEdges = get().edges.map((edge) => {
+      if (edge.id !== id) return edge;
+      return {...edge}
+    });
+
     set({
       nodes: updatedNodes,
+      edges: updatedEdges,
       scenarioData: {
         ...get().scenarioData,
         nodes: updatedNodes as ScenarioNode[],
+        edges: updatedEdges as ScenarioEdge[],
       },
     });
   },

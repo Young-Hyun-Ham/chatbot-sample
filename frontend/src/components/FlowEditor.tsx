@@ -46,15 +46,14 @@ const FlowEditor = ({ onClickList, onClickSave }: any) => {
     (changes: NodeChange[]) => {
       setNodes((prev) => applyNodeChanges(changes, prev));
     },
-    [setNodes] // nodes는 더 이상 의존성에 넣지 않음
+    [setNodes]
   );
 
   const handleEdgesChange = useCallback(
     (changes: EdgeChange[]) => {
-      const updated = applyEdgeChanges(changes, edges);
-      setEdges(updated);
+      setEdges((prev) => applyEdgeChanges(changes, prev));
     },
-    [edges, setEdges]
+    [setEdges]
   );
 
   const onConnect = useCallback(
@@ -80,7 +79,7 @@ const FlowEditor = ({ onClickList, onClickSave }: any) => {
           onClick={onClickList}
           className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 mr-2"
         >
-          List
+          목록
         </button>
         <button
           onClick={onClickSave}

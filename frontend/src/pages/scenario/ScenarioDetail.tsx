@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import ChatPreview from '../../components/ChatPreview';
+import ChatBot from '../../components/ChatBot';
 import FlowEditor from '../../components/FlowEditor';
 import SectionToolbar from '../../components/SectionToolbar';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -68,7 +68,7 @@ const ScenarioDetail = () => {
 
       {/* 4. 챗봇 */}
       <div className="absolute top-0 right-0 h-full w-[250px] bg-blue-100">
-        <ChatPreview />
+        <ChatBot />
       </div>
 
       {/* 토글 버튼 */}

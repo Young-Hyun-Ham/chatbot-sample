@@ -17,6 +17,7 @@ const TextNode = ({ id, data }: any) => {
 
   const handleValueChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     updateNodeData(id, { value: e.target.value });
+    setValue(value);
   };
   
   // data가 없으면 렌더링하지 않음
@@ -40,7 +41,7 @@ const TextNode = ({ id, data }: any) => {
           className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
           rows={2}
           value={data.value || ''}
-            onChange={handleValueChange}
+          onChange={handleValueChange}
         />
 
         <label className="text-xs font-medium block">Quick Replies</label>
