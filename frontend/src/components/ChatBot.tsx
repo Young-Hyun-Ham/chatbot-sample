@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useScenarioStore } from '../store/useScenarioStore';
 import MessageBubble from './MessageBubble';
 import QuickReplyButtons from './QuickReplyButtons';
-import type { ConditionNode, TextNode } from '../types/scenario';
 
 const ChatBot = () => {
   const scenarioData = useScenarioStore((state) => state.scenarioData);

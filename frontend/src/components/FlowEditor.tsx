@@ -11,10 +11,9 @@ import {
   type Edge,
   type NodeChange,
   type EdgeChange,
-  useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useScenarioStore } from '../store/useScenarioStore';
 import TextNode from './node/TextNode';
 import SlotFillingNode from './node/SlotFillingNode';
@@ -93,10 +92,10 @@ const FlowEditor = ({onSelectNode}: any) => {
           fitView={false}                 // 혹시 모를 자동 맞춤 방지
           onNodeClick={(_, node) => onSelectNode?.(node.id)}
           onPaneClick={() => onSelectNode?.(null)}
-          onNodeDragStop={(event, node) => {
+          onNodeDragStop={(_event, node) => {
             updateNodePosition(node.id, node.position.x, node.position.y);
           }}
-          onNodeDoubleClick={(event, node) => {
+          onNodeDoubleClick={(_event, node) => {
             const newLabel = prompt('새 라벨 입력:', node.data?.label as string);
             if (newLabel !== null) {
               updateNodeData(node.id, { label: newLabel });

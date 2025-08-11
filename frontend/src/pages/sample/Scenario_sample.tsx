@@ -82,7 +82,7 @@ const FlowCanvas = () => {
   );
 
   const onNodeDoubleClick = useCallback(
-    (event: React.MouseEvent, node: Node) => {
+    (_event: React.MouseEvent, node: Node) => {
       const newLabel = prompt('노드 내용을 수정하세요:', String(node.data.label));
       if (newLabel && newLabel.trim() !== '') {
         setNodes((nds) =>

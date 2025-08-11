@@ -6,7 +6,7 @@ const TextNode = ({ id, data }: any) => {
   const updateNodeData = useScenarioStore((s) => s.updateNodeData);
   const deleteNode = useScenarioStore((state) => state.deleteNode);
 
-  const [label, setLabel] = useState(data.label);
+  const [_label, setLabel] = useState(data.label);
   
   useEffect(() => {
     setLabel(data.label);

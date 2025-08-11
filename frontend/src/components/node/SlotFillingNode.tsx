@@ -6,7 +6,7 @@ const SlotFillingNode = memo(({ id, data }: any) => {
   const deleteNode = useScenarioStore((s) => s.deleteNode);
   const updateNodeData = useScenarioStore((s) => s.updateNodeData);
 
-  const [replies, setReplies] = useState(data.quickReplies || []);
+  const [_replies, _setReplies] = useState(data.quickReplies || []);
 
   const handleQuestionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     updateNodeData(id, { value: e.target.value });
