@@ -11,14 +11,12 @@ const ChatBot = () => {
   const [slotValues, setSlotValues] = useState<Record<string, string>>({});
   const [isAwaitingCondition, setIsAwaitingCondition] = useState(false);
 
-  // input 객체 선언
-  const chatInputRef = useRef<HTMLInputElement>(null); // 선언
+  const chatInputRef = useRef<HTMLInputElement>(null);
 
   const isEndOfConversation = useMemo(() => {
     if (!currentNodeId) return false;
     return !scenarioData.edges.some((e) => e.source === currentNodeId);
   }, [currentNodeId, scenarioData.edges]);
-
 
   const stableScenario = useMemo(() => {
     return {
@@ -27,9 +25,8 @@ const ChatBot = () => {
     };
   }, [scenarioData.nodes, scenarioData.edges]);
 
-  const replaceTemplateVariables = (text: string, slots: Record<string, string>) => {
-    return text.replace(/\{(\w+)\}/g, (_, key) => slots[key] ?? `{${key}}`);
-  };
+  const replaceTemplateVariables = (text: string, slots: Record<string, string>) =>
+    text.replace(/\{(\w+)\}/g, (_, key) => slots[key] ?? `{${key}}`);
 
   const initializeChat = () => {
     const { nodes, edges } = stableScenario;
@@ -51,25 +48,16 @@ const ChatBot = () => {
     const currentNode = scenarioData.nodes.find((n) => n.id === currentNodeId);
     if (!currentNode) return;
 
-    // 사용자 메시지 추가
     setMessages((prev) => [...prev, { sender: 'user', text: value }]);
 
-    // 슬롯 저장 (비동기 상태 업데이트 회피 → 직접 업데이트된 값을 사용)
     const slotKey = (currentNode.data as any).slotKey;
-    const newSlotValues = slotKey
-      ? { ...slotValues, [slotKey]: value }
-      : slotValues;
+    const newSlotValues = slotKey ? { ...slotValues, [slotKey]: value } : slotValues;
+    if (slotKey) setSlotValues(newSlotValues);
 
-    if (slotKey) {
-      setSlotValues(newSlotValues);
-    }
-
-    // 다음 노드 찾기
     const nextEdge = scenarioData.edges.find((e) => e.source === currentNode.id);
     const nextNode = scenarioData.nodes.find((n) => n.id === nextEdge?.target);
 
     if (nextNode) {
-      // 컨디션 노드면 텍스트만 출력하고 버튼 대기
       if (nextNode.type === 'conditionNode') {
         const replaced = replaceTemplateVariables(nextNode.data.value, newSlotValues);
         setMessages((prev) => [...prev, { sender: 'bot', text: replaced }]);
@@ -77,8 +65,6 @@ const ChatBot = () => {
         setIsAwaitingCondition(true);
         return;
       }
-
-      // 일반 노드 처리
       const replaced = replaceTemplateVariables((nextNode.data as any).value, newSlotValues);
       setTimeout(() => {
         setMessages((prev) => [...prev, { sender: 'bot', text: replaced }]);
@@ -96,8 +82,8 @@ const ChatBot = () => {
     const edge = scenarioData.edges.find(
       (e: any) => e.source === currentNode.id && e.sourceHandle === (isTrue ? 'true' : 'false')
     );
-
     const nextNode = scenarioData.nodes.find((n) => n.id === edge?.target);
+
     if (nextNode) {
       const replaced = replaceTemplateVariables((nextNode.data as any).value, slotValues);
       setMessages((prev) => [...prev, { sender: 'user', text: isTrue ? '확인' : '취소' }]);
@@ -106,7 +92,6 @@ const ChatBot = () => {
     } else {
       setCurrentNodeId(null);
     }
-
     setIsAwaitingCondition(false);
   };
 
@@ -118,15 +103,9 @@ const ChatBot = () => {
       {/* 상단 바 */}
       <div className="flex justify-between items-center px-4 py-2 bg-white border-b">
         <span className="font-bold text-lg">챗봇</span>
-        <button
-          onClick={initializeChat}
-          className="px-3 py-1 border rounded-full text-sm hover:bg-gray-100"
-        >
-          다시 시작
-        </button>
       </div>
 
-      {/* 채팅 메시지 영역 */}
+      {/* 메시지 영역 */}
       <div className="flex-1 bg-blue-100 overflow-auto px-4 py-2">
         {messages.map((msg, idx) => (
           <MessageBubble key={idx} text={msg.text} sender={msg.sender} />
@@ -134,17 +113,17 @@ const ChatBot = () => {
       </div>
 
       {/* 하단 입력 UI */}
-      <div className="p-4 bg-white border-t">
+      <div className="bg-white border-t p-[5px]">
         {isAwaitingCondition ? (
-          <div className="flex space-x-2">
+          <div className="flex gap-[5px]">
             <button
-              className="w-full py-2 border rounded-full hover:bg-gray-100"
+              className="w-full h-10 border rounded-md hover:bg-gray-100"
               onClick={() => handleConditionReply(true)}
             >
               확인
             </button>
             <button
-              className="w-full py-2 border rounded-full hover:bg-gray-100"
+              className="w-full h-10 border rounded-md hover:bg-gray-100"
               onClick={() => handleConditionReply(false)}
             >
               취소
@@ -154,37 +133,37 @@ const ChatBot = () => {
           quickReplies?.length ? (
             <QuickReplyButtons replies={quickReplies} onSelect={handleReply} />
           ) : (
-            <div className="flex items-center gap-[2px] mt-2 px-[2px]">
-            <input
-              ref={chatInputRef}
-              type="text"
-              className="flex-1 px-[6px] py-[2px] border rounded text-sm"
-              placeholder="메시지를 입력하세요..."
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && e.currentTarget.value) {
-                  handleReply(e.currentTarget.value);
-                  e.currentTarget.value = '';
-                }
-              }}
-            />
-            <button
-              className="px-[12px] py-[6px] bg-blue-500 text-white rounded text-sm whitespace-nowrap mr-[2px]"
-              onClick={() => {
-                const input = chatInputRef.current;
-                if (input && input.value) {
-                  handleReply(input.value);
-                  input.value = '';
-                }
-              }}
-            >
-              전송
-            </button>
-          </div>
+            <div className="flex items-center gap-[5px]">
+              <input
+                ref={chatInputRef}
+                type="text"
+                className="flex-1 h-10 px-3 border rounded-md text-sm"
+                placeholder="메시지를 입력하세요..."
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && e.currentTarget.value) {
+                    handleReply(e.currentTarget.value);
+                    e.currentTarget.value = '';
+                  }
+                }}
+              />
+              <button
+                className="h-10 px-4 bg-blue-500 text-white rounded-md text-sm whitespace-nowrap"
+                onClick={() => {
+                  const input = chatInputRef.current;
+                  if (input && input.value) {
+                    handleReply(input.value);
+                    input.value = '';
+                  }
+                }}
+              >
+                전송
+              </button>
+            </div>
           )
         ) : (
           <button
             onClick={initializeChat}
-            className="w-full py-2 border rounded-full hover:bg-gray-100"
+            className="w-full h-10 border rounded-md hover:bg-gray-100"
           >
             대화 다시 시작하기
           </button>
