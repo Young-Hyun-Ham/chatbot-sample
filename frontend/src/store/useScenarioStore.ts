@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { type Node, type Edge } from '@xyflow/react';
+import { type Node, type Edge, type Viewport } from '@xyflow/react';
 import { nanoid } from 'nanoid';
 import type { ConditionNode, ScenarioData, ScenarioEdge, ScenarioNode, SlotFillingNode, TextNode } from '../types/scenario';
 
@@ -17,6 +17,8 @@ interface ScenarioStore {
   updateNodePosition: (id: string, x: number, y: number) => void;
   updateNodeData: (id: string, data: Partial<Node['data']>) => void;
   addEdgeToScenarioData: (edge: Edge) => void;
+  viewport: Viewport;
+  setViewport: (vp: Viewport) => void;
 }
 
 export const useScenarioStore = create<ScenarioStore>((set, get) => ({
@@ -219,4 +221,6 @@ export const useScenarioStore = create<ScenarioStore>((set, get) => ({
       },
     });
   },
+  viewport: { x: 0, y: 0, zoom: 0.9 },
+  setViewport: (vp) => set({ viewport: vp }),
 }));

@@ -11,6 +11,7 @@ import {
   type Edge,
   type NodeChange,
   type EdgeChange,
+  useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { useCallback, useEffect, useMemo } from 'react';
@@ -27,6 +28,9 @@ const FlowEditor = ({ onClickList, onClickSave }: any) => {
   const updateNodePosition = useScenarioStore((s) => s.updateNodePosition);
   const updateNodeData = useScenarioStore((s) => s.updateNodeData);
   const addEdgeToScenarioData = useScenarioStore((s) => s.addEdgeToScenarioData);
+
+  const viewport = useScenarioStore((s) => s.viewport);
+  const saveViewport = useScenarioStore((s) => s.setViewport);
 
   const nodeTypes = useMemo(() => ({
     textNode: TextNode,
@@ -98,7 +102,9 @@ const FlowEditor = ({ onClickList, onClickSave }: any) => {
           onEdgesChange={handleEdgesChange}
           onConnect={onConnect}
           nodeTypes={nodeTypes}
-          defaultViewport={{ x: 0, y: 0, zoom: 0.9 }}
+          defaultViewport={viewport}      // 최초 1회용
+          onMoveEnd={(_, vp) => saveViewport(vp)} // 이동/줌 종료 시 저장
+          fitView={false}                 // 혹시 모를 자동 맞춤 방지
           onNodeDragStop={(event, node) => {
             updateNodePosition(node.id, node.position.x, node.position.y);
           }}
@@ -110,6 +116,10 @@ const FlowEditor = ({ onClickList, onClickSave }: any) => {
           }}
           elementsSelectable
           nodesConnectable
+          onInit={(instance) => {
+            // 마운트 시 마지막 뷰포트 복원
+            instance.setViewport(viewport);
+          }}
         >
           <MiniMap />
           <Controls />

@@ -22,6 +22,7 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ message: '잘못된 이메일 또는 비밀번호입니다.' });
     }
 
+    console.log('로그인 성공!');
     // (선택) JWT 발급 또는 그냥 사용자 정보 반환
     return res.json({
       message: '로그인 성공',
