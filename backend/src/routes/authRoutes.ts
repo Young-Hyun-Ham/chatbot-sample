@@ -4,10 +4,6 @@ import { pool } from '../db';
 
 const router = Router();
 
-router.get('/login/1', async (req, res) => {
-  console.log("여기 들어 와?")
-});
-
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
