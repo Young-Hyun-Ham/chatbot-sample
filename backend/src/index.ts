@@ -34,6 +34,12 @@ import chatRoutes from './routes/chatRoutes';
 import scenarioRoutes from './routes/scenarioRoutes';
 import scenarioDetailRoutes from './routes/scenarioDetailRoutes';
 
+// 요청 경로 로깅 미들웨어 추가
+app.use((req, res, next) => {
+  console.log(`Request received: ${req.method} ${req.path}`);
+  next();
+});
+
 app.use('/auth', authRoutes);
 app.use('/chat', chatRoutes);
 app.use('/scenario', scenarioRoutes);
