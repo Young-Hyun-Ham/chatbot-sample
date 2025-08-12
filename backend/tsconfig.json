@@ -1,16 +1,19 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "es6",
     "module": "commonjs",
-    "moduleResolution": "node",
-    "rootDir": "./src",
-    "outDir": "./dist",
+    "outDir": "./dist",      // 컴파일된 JS 파일이 생성될 폴더
+    "rootDir": "./",         // 소스코드의 루트 폴더
     "strict": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "api"]   // ✅ api 제외
+  "include": [ // 컴파일할 파일 범위
+    "api/**/*.ts",
+    "src/**/*.ts"
+  ],
+  "exclude": [ // 컴파일에서 제외할 파일
+    "node_modules"
+  ]
 }
