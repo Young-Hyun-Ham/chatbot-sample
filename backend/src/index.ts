@@ -7,6 +7,9 @@ import authRoutes from './routes/authRoutes';
 import scenarioRoutes from './routes/scenarioRoutes';
 import scenarioDetailRoutes from './routes/scenarioDetailRoutes';
 
+import dns from 'dns';
+dns.setServers(['1.1.1.1', '8.8.8.8']);
+
 dotenv.config();
 
 const app = express();

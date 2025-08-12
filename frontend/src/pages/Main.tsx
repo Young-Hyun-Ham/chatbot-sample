@@ -72,7 +72,7 @@ const Main = () => {
         <button
           onClick={() => {
             localStorage.clear();
-            window.location.href = '/auth/login';
+            window.location.href = '/';
           }}
           className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
         >
