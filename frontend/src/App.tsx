@@ -1,24 +1,12 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './pages/Login';
+import Login from './pages/login/Login';
 import ProtectedRoute from './routes/ProtectedRoute';
-import { useAuthStore } from './store/authStore';
-import { useEffect } from 'react';
-import Register from './pages/Register';
+import Register from './pages/member/Register';
 import Main from './pages/Main';
-
-const useRestoreAuth = () => {
-  const { login } = useAuthStore();
-  useEffect(() => {
-    const token = localStorage.getItem('auth_token');
-    const username = localStorage.getItem('auth_user');
-    if (token && username) {
-      login(token, username);
-    }
-  }, []);
-};
+import { CounterProvider } from './store/customHooks/contexts/CounterContext';
+import ScenarioDetail from './pages/scenario/ScenarioDetail';
 
 function App() {
-  // useRestoreAuth();
 
   return (
     <BrowserRouter>
@@ -30,10 +18,14 @@ function App() {
           path="/main"
           element={
             <ProtectedRoute>
-              <Main />
+              {/* 커스텀훅을 사용하기 위해 counter 컴포넌트를 감싸는 CounterProvider를 추가합니다. */}
+              <CounterProvider>
+                <Main />
+              </CounterProvider>
             </ProtectedRoute>
           }
         />
+        <Route path="/scenario/:id" element={<ScenarioDetail />} />
       </Routes>
     </BrowserRouter>
   );

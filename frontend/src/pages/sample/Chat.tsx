@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { fetchMessages, postMessage, type ChatMessage } from '../api/chatApi';
-import { useAuthStore } from '../store/authStore';
+import { useEffect, useState } from 'react';
+import { fetchMessages, postMessage, type ChatMessage } from '../../api/chatApi';
+import { useAuthStore } from '../../store/authStore';
 
 const Chat = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
