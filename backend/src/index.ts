@@ -19,6 +19,7 @@ const port = process.env.PORT || 5000;
 const whitelist = [
   'http://localhost:5173',   // Vite
   'https://chatbot-sample-git-v100-younghyunhams-projects.vercel.app',   // 개발
+  'https://chatbot-frontend-ten-snowy.vercel.app/',
   process.env.FRONTEND_URL,  // 운영 배포 도메인 (예: https://www.example.com)
 ].filter(Boolean);
 
