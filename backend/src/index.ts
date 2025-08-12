@@ -28,7 +28,7 @@ app.use(cors({
 
 app.use(express.json());
 
-// ❗여기서는 '/api'를 붙이지 마세요 (Vercel이 자동으로 붙임)
+// 여기서는 '/api'를 붙이지 마세요 (Vercel이 자동으로 붙임)
 import authRoutes from './routes/authRoutes';
 import chatRoutes from './routes/chatRoutes';
 import scenarioRoutes from './routes/scenarioRoutes';
