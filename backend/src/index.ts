@@ -23,7 +23,9 @@ app.use(cors({
   credentials: false,
   maxAge: 600,
 }));
-app.options('*', cors());
+
+// app.options('*', cors());
+
 app.use(express.json());
 
 // ❗여기서는 '/api'를 붙이지 마세요 (Vercel이 자동으로 붙임)
