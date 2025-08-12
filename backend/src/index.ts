@@ -5,9 +5,9 @@ import cors from 'cors';
 
 // 라우터들을 먼저 import 합니다.
 import authRoutes from './routes/authRoutes';
-import chatRoutes from './routes/chatRoutes';
-import scenarioRoutes from './routes/scenarioRoutes';
-import scenarioDetailRoutes from './routes/scenarioDetailRoutes';
+// import chatRoutes from './routes/chatRoutes';
+// import scenarioRoutes from './routes/scenarioRoutes';
+// import scenarioDetailRoutes from './routes/scenarioDetailRoutes';
 
 const app = express();
 
@@ -44,9 +44,9 @@ app.use((req, res, next) => {
 // --- 3. 라우터 등록 ---
 // Vercel이 자동으로 '/api'를 붙여주므로 여기서는 붙이지 않습니다.
 app.use('/auth', authRoutes);
-app.use('/chat', chatRoutes);
-app.use('/scenario', scenarioRoutes);
-app.use('/scenario-detail', scenarioDetailRoutes);
+// app.use('/chat', chatRoutes);
+// app.use('/scenario', scenarioRoutes);
+// app.use('/scenario-detail', scenarioDetailRoutes);
 
 // --- 4. 기본 동작 및 로컬 서버 실행 ---
 export default app;
