@@ -8,6 +8,8 @@ const app = express();
 const whitelist = [
   'http://localhost:5173',
   'https://chatbot-frontend-ten-snowy.vercel.app',
+  'https://chatbot-frontend-git-main-younghyunhams-projects.vercel.app',
+  'chatbot-frontend-mn6yrot3d-younghyunhams-projects.vercel.app',
 ].filter(Boolean) as string[];
 
 app.use((req, res, next) => { res.setHeader('Vary', 'Origin'); next(); });
