@@ -1,8 +1,14 @@
+// src/routes/authRoutes.ts
+
 import { Router } from 'express';
 import bcrypt from 'bcrypt';
 import { pool } from '../db';
 
 const router = Router();
+
+router.get('/login', async (req, res) => {
+    console.log("=============> ", req);
+});
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
