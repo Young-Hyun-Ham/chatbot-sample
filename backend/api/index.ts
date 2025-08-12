@@ -1,3 +1,3 @@
-// api/index.ts
-import app from '../src/index';
-export default app;   // ✅ listen 없음
+// /api/index.ts
+
+export { default } from '../src/index';
