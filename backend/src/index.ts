@@ -19,39 +19,41 @@ const port = process.env.PORT || 5000;
 const whitelist = [
   'http://localhost:5173',   // Vite
   'https://chatbot-sample-git-v100-younghyunhams-projects.vercel.app',   // 개발
-  'https://chatbot-frontend-ten-snowy.vercel.app/',
+  'https://chatbot-frontend-ten-snowy.vercel.app',
   process.env.FRONTEND_URL,  // 운영 배포 도메인 (예: https://www.example.com)
 ].filter(Boolean);
 
 const corsOptions: cors.CorsOptions = {
   origin(origin, cb) {
-    // Postman, 서버-서버 호출 등 Origin 없는 경우 허용
-    if (!origin) return cb(null, true);
-    if (whitelist.includes(origin)) return cb(null, true);
-    return cb(new Error('Not allowed by CORS'));
+    if (!origin) return cb(null, true);                 // 서버-서버/포스트맨 허용
+    return cb(null, whitelist.includes(origin));
   },
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  exposedHeaders: ['X-Total-Count'],    // 필요 시
-  credentials: false,                    // 쿠키/세션을 쓸 때만 true
-  maxAge: 600,                          // preflight 캐시(초)
+  credentials: false, // 쿠키 쓰면 true로
+  maxAge: 600,
 };
 
+app.use((req, res, next) => {
+  res.setHeader('Vary', 'Origin'); // 캐시 분기
+  next();
+});
+
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // preflight 대응
+app.options('*', cors(corsOptions));
 
 app.use(express.json());
 
 // 기본 라우트
-app.use('/api/auth', authRoutes);
+app.use('/auth', authRoutes);
 
 // API 엔드포인트 등록
-app.use('/api/chat', chatRoutes);
+app.use('/chat', chatRoutes);
 
 // scenario API 엔드포인트 등록
-app.use('/api/scenario', scenarioRoutes);
-app.use('/api/scenario-detail', scenarioDetailRoutes);
+app.use('/scenario', scenarioRoutes);
+app.use('/scenario-detail', scenarioDetailRoutes);
 
-app.listen(port, () => {
-  console.log(`🚀 Server is running on http://localhost:${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`🚀 Server is running on http://localhost:${port}`);
+// });
