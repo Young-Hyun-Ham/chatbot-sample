@@ -4,7 +4,7 @@ import {type CreateAxiosDefaults} from 'axios';
 import { SESSION_TIME } from '../config/session';
 
 const api = axios.create({
-  baseURL: 'https://chatbot-backend-ruddy-iota.vercel.app/api', // 백엔드 주소
+  baseURL: 'https://chatbot-sample-azure.vercel.app/api', // 백엔드 주소
   headers: {
     'Content-Type': 'application/json',
   },
