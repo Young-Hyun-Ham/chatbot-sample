@@ -1,10 +1,18 @@
 // src/index.ts
+
 import express from 'express';
 import cors from 'cors';
 
+// 라우터들을 먼저 import 합니다.
+import authRoutes from './routes/authRoutes';
+import chatRoutes from './routes/chatRoutes';
+import scenarioRoutes from './routes/scenarioRoutes';
+import scenarioDetailRoutes from './routes/scenarioDetailRoutes';
+
 const app = express();
 
-// CORS 설정 (프론트 도메인만 허용)
+// --- 1. 핵심 미들웨어 등록 ---
+// CORS 설정
 const whitelist = [
   'http://localhost:5173',
   'https://chatbot-frontend-ten-snowy.vercel.app',
@@ -24,27 +32,23 @@ app.use(cors({
   maxAge: 600,
 }));
 
-// app.options('*', cors());
-
+// JSON 파서
 app.use(express.json());
 
-// 여기서는 '/api'를 붙이지 마세요 (Vercel이 자동으로 붙임)
-import authRoutes from './routes/authRoutes';
-import chatRoutes from './routes/chatRoutes';
-import scenarioRoutes from './routes/scenarioRoutes';
-import scenarioDetailRoutes from './routes/scenarioDetailRoutes';
-
-// 요청 경로 로깅 미들웨어 추가
+// --- 2. 디버깅용 로깅 미들웨어 등록 ---
 app.use((req, res, next) => {
-  console.log(`Request received: ${req.method} ${req.path}`);
+  console.log(`[Request] ${req.method} ${req.path}`);
   next();
 });
 
+// --- 3. 라우터 등록 ---
+// Vercel이 자동으로 '/api'를 붙여주므로 여기서는 붙이지 않습니다.
 app.use('/auth', authRoutes);
 app.use('/chat', chatRoutes);
 app.use('/scenario', scenarioRoutes);
 app.use('/scenario-detail', scenarioDetailRoutes);
 
+// --- 4. 기본 동작 및 로컬 서버 실행 ---
 export default app;
 
 // 로컬 개발에서만 서버 포트 오픈

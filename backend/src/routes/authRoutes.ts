@@ -7,7 +7,9 @@ import { pool } from '../db';
 const router = Router();
 
 router.get('/login', async (req, res) => {
-    console.log("=============> ", req);
+    console.log("GET /api/auth/login successful!");
+    // 클라이언트에 반드시 응답을 보내야 합니다.
+    res.status(200).send('GET request to /login is working.');
 });
 
 router.post('/login', async (req, res) => {
