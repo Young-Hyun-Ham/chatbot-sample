@@ -2,11 +2,14 @@
 
 import { Pool } from 'pg';
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 // dotenv.config()는 Vercel 환경에서 불필요하므로 제거해도 무방합니다.
 // 로컬 개발을 위해 남겨두어도 되지만, Vercel에서는 영향을 주지 않습니다.
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
-}
+// if (process.env.NODE_ENV !== 'production') {
+//   require('dotenv').config();
+// }
 
 console.log('Attempting to create a new DB pool...');
 console.log(`DATABASE_URL is set: ${!!process.env.DATABASE_URL}`);
@@ -32,8 +35,8 @@ try {
   );
 
   // 헬스체크
-  pool.query('SELECT NOW()')
-    .then(result => console.log('✅ DB connection successful. Server time:', result.rows[0].now))
+  pool.query('SELECT 1')
+    .then(result => console.log('✅ DB connection successful. Server time:', result.rows[0]))
     .catch(err => console.error('❌ DB query failed after connection.', err));
 
 } catch (err) {
