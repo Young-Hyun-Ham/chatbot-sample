@@ -17,7 +17,7 @@ export type RegisterPayload = {
   username: string;
 };
 
-export const axiosLogin = async (payload: LoginPayload): Promise<LoginResponse> => {
+export const axiosLogin = async (_payload: LoginPayload): Promise<LoginResponse> => {
   // const response = await api.post('/auth/login', payload);
   const response = await api.get("/hello");
   return response.data;
