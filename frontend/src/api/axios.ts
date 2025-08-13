@@ -4,7 +4,7 @@ import {type CreateAxiosDefaults} from 'axios';
 import { SESSION_TIME } from '../config/session';
 
 const api = axios.create({
-  baseURL: 'https://test-node-git-main-younghyunhams-projects.vercel.app/api', // 백엔드 주소
+  baseURL: 'https://chatbot-backend-git-main-younghyunhams-projects.vercel.app/api', // 백엔드 주소
   // baseURL: 'http://localhost:5000',
   headers: {
     'Content-Type': 'application/json',
