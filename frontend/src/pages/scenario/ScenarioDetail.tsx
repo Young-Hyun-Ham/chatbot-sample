@@ -21,6 +21,7 @@ const ScenarioDetail = () => {
   const setNodes = useScenarioStore((s) => s.setNodes);
   const setEdges = useScenarioStore((s) => s.setEdges);
   const scenarioData = useScenarioStore((state) => state.scenarioData);
+  const setScenarioData = useScenarioStore((state) => state.setScenarioData);
   const { id } = useParams();
 
   const [isLogVisible, setIsLogVisible] = useState(true);
@@ -32,18 +33,28 @@ const ScenarioDetail = () => {
   const [isChatVisible, setIsChatVisible] = useState(true);
   const effectiveChatWidth = isChatVisible ? chatWidth : 0;
 
+  const lastLoadedRef: any = useRef<string | null>(null);
+
   useEffect(() => {
+    // React 18의 <React.StrictMode> 때문에 useEffect가 “의도적으로 두 번” 실행 된다.
+    // 마운트 → 이펙트 실행 → 클린업 → 다시 마운트 → 이펙트 재실행 마운트 2번 실행.
+    // 한번만 호출 하도록 변경
+    if (import.meta.env.DEV && lastLoadedRef.current === id) return;
+    lastLoadedRef.current = id;
+
     const loadScenario = async () => {
-      const res = await api.get(`/scenario/${id}`);
-      const { nodes, edges } = res.data.scenario_data || {};
+      const res = await api.get(`/scenario-detail/${id}`);
+      console.log("load  data ==============================> ", res);
+      const { nodes, edges } = res.data.data || {};
       setNodes(nodes || []);
       setEdges(edges || []);
+      setScenarioData((res.data.data as any) || {});
     };
     loadScenario();
-  }, [id, setNodes, setEdges]);
+  }, [id]);
 
   const handleSave = async () => {
-    await api.post(`/scenario_detail`, {
+    await api.post(`/scenario-detail`, {
       scenario_id: id,
       data: scenarioData,
       create_id: email,
